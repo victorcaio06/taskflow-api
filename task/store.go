@@ -1,5 +1,7 @@
 package task
 
+import "errors"
+
 // Store guarda as tarefas em memória.
 type Store struct {
 	tasks  map[int]Task
@@ -37,4 +39,17 @@ func (s *Store) List() []Task {
 	}
 
 	return list
+}
+
+// UpdateStatus altera o status de uma tarefa existente.
+func (s *Store) UpdateStatus(id int, status Status) error {
+	t, exists := s.tasks[id]
+	if !exists {
+		return errors.New("tarefa não encontrada")
+	}
+
+	t.Status = status
+	s.tasks[id] = t
+
+	return nil
 }
