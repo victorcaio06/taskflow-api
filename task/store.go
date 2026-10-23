@@ -2,13 +2,11 @@ package task
 
 import "errors"
 
-// Store guarda as tarefas em memória.
 type Store struct {
 	tasks  map[int]Task
 	nextID int
 }
 
-// NewStore cria um Store vazio.
 func NewStore() *Store {
 	return &Store{
 		tasks:  make(map[int]Task),
@@ -16,7 +14,6 @@ func NewStore() *Store {
 	}
 }
 
-// Add cadastra uma nova tarefa com status pendente.
 func (s *Store) Add(title string) Task {
 	t := Task{
 		ID:     s.nextID,
@@ -30,7 +27,6 @@ func (s *Store) Add(title string) Task {
 	return t
 }
 
-// List retorna as tarefas em ordem de ID.
 func (s *Store) List() []Task {
 	list := []Task{}
 
@@ -41,7 +37,6 @@ func (s *Store) List() []Task {
 	return list
 }
 
-// UpdateStatus altera o status de uma tarefa existente.
 func (s *Store) UpdateStatus(id int, status Status) error {
 	t, exists := s.tasks[id]
 	if !exists {
