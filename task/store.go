@@ -1,6 +1,6 @@
 package task
 
-import "errors"
+import "fmt"
 
 type Store struct {
 	tasks  map[int]Task
@@ -40,7 +40,7 @@ func (s *Store) List() []Task {
 func (s *Store) UpdateStatus(id int, status Status) error {
 	t, exists := s.tasks[id]
 	if !exists {
-		return errors.New("tarefa não encontrada")
+		return fmt.Errorf("%w: id %d", ErrNotFound, id)
 	}
 
 	t.Status = status
