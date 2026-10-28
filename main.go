@@ -51,14 +51,12 @@ func read(scanner *bufio.Scanner, message string) string {
 }
 
 func addTask(store *task.Store, scanner *bufio.Scanner) {
-	title := read(scanner, "Título: ")
-
-	if title == "" {
-		fmt.Println("O título não pode ser vazio")
+	t, err := store.Add(read(scanner, "Título: "))
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	t := store.Add(title)
 	fmt.Printf("Tarefa %d cadastrada\n", t.ID)
 }
 

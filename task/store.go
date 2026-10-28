@@ -14,7 +14,12 @@ func NewStore() *Store {
 	}
 }
 
-func (s *Store) Add(title string) Task {
+func (s *Store) Add(title string) (Task, error) {
+	title, err := normalizeTitle(title)
+	if err != nil {
+		return Task{}, err
+	}
+
 	t := Task{
 		ID:     s.nextID,
 		Title:  title,
@@ -24,7 +29,7 @@ func (s *Store) Add(title string) Task {
 	s.tasks[t.ID] = t
 	s.nextID++
 
-	return t
+	return t, nil
 }
 
 func (s *Store) List() []Task {
@@ -38,6 +43,10 @@ func (s *Store) List() []Task {
 }
 
 func (s *Store) UpdateStatus(id int, status Status) error {
+	if !status.Valid() {
+		return fmt.Errorf("%w: %q", ErrInvalidStatus, status)
+	}
+
 	t, exists := s.tasks[id]
 	if !exists {
 		return fmt.Errorf("%w: id %d", ErrNotFound, id)

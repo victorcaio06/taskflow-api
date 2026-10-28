@@ -2,5 +2,13 @@ package task
 
 import "errors"
 
-// ErrNotFound indica que não existe tarefa com o ID informado.
-var ErrNotFound = errors.New("tarefa não encontrada")
+var (
+	// ErrNotFound indica que não existe tarefa com o ID informado.
+	ErrNotFound = errors.New("tarefa não encontrada")
+
+	// ErrInvalidTitle indica um título vazio ou longo demais.
+	ErrInvalidTitle = errors.New("título inválido")
+
+	// ErrInvalidStatus indica um status fora dos valores conhecidos.
+	ErrInvalidStatus = errors.New("status inválido")
+)
