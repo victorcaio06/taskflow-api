@@ -11,4 +11,7 @@ var (
 
 	// ErrInvalidStatus indica um status fora dos valores conhecidos.
 	ErrInvalidStatus = errors.New("status inválido")
+
+	// ErrAlreadyDone indica que a tarefa já estava concluída.
+	ErrAlreadyDone = errors.New("tarefa já concluída")
 )

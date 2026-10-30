@@ -32,6 +32,15 @@ func (s *Store) Add(title string) (Task, error) {
 	return t, nil
 }
 
+func (s *Store) Get(id int) (Task, error) {
+	t, exists := s.tasks[id]
+	if !exists {
+		return Task{}, fmt.Errorf("%w: id %d", ErrNotFound, id)
+	}
+
+	return t, nil
+}
+
 func (s *Store) List() []Task {
 	list := []Task{}
 
@@ -47,12 +56,27 @@ func (s *Store) UpdateStatus(id int, status Status) error {
 		return fmt.Errorf("%w: %q", ErrInvalidStatus, status)
 	}
 
-	t, exists := s.tasks[id]
-	if !exists {
-		return fmt.Errorf("%w: id %d", ErrNotFound, id)
+	t, err := s.Get(id)
+	if err != nil {
+		return err
 	}
 
 	t.Status = status
+	s.tasks[id] = t
+
+	return nil
+}
+
+func (s *Store) Complete(id int) error {
+	t, err := s.Get(id)
+	if err != nil {
+		return err
+	}
+
+	if err := t.Complete(); err != nil {
+		return fmt.Errorf("concluir tarefa %d: %w", id, err)
+	}
+
 	s.tasks[id] = t
 
 	return nil

@@ -19,6 +19,8 @@ func main() {
 		fmt.Println("1 - Cadastrar tarefa")
 		fmt.Println("2 - Listar tarefas")
 		fmt.Println("3 - Alterar status")
+		fmt.Println("4 - Consultar tarefa")
+		fmt.Println("5 - Concluir tarefa")
 		fmt.Println("0 - Sair")
 
 		option := read(scanner, "Opção: ")
@@ -30,6 +32,10 @@ func main() {
 			listTasks(store)
 		case "3":
 			changeStatus(store, scanner)
+		case "4":
+			showTask(store, scanner)
+		case "5":
+			completeTask(store, scanner)
 		case "0":
 			return
 		default:
@@ -73,10 +79,48 @@ func listTasks(store *task.Store) {
 	}
 }
 
-func changeStatus(store *task.Store, scanner *bufio.Scanner) {
+func readID(scanner *bufio.Scanner) (int, bool) {
 	id, err := strconv.Atoi(read(scanner, "ID da tarefa: "))
 	if err != nil {
 		fmt.Println("ID inválido")
+		return 0, false
+	}
+
+	return id, true
+}
+
+func showTask(store *task.Store, scanner *bufio.Scanner) {
+	id, ok := readID(scanner)
+	if !ok {
+		return
+	}
+
+	t, err := store.Get(id)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Printf("[%d] %s (%s)\n", t.ID, t.Title, t.Status)
+}
+
+func completeTask(store *task.Store, scanner *bufio.Scanner) {
+	id, ok := readID(scanner)
+	if !ok {
+		return
+	}
+
+	if err := store.Complete(id); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("Tarefa concluída")
+}
+
+func changeStatus(store *task.Store, scanner *bufio.Scanner) {
+	id, ok := readID(scanner)
+	if !ok {
 		return
 	}
 

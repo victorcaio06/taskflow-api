@@ -35,6 +35,23 @@ type Task struct {
 	Status Status
 }
 
+// IsDone informa se a tarefa já foi concluída.
+func (t Task) IsDone() bool {
+	return t.Status == Done
+}
+
+// Complete marca a tarefa como concluída.
+// Usa receiver ponteiro porque altera a própria tarefa.
+func (t *Task) Complete() error {
+	if t.IsDone() {
+		return ErrAlreadyDone
+	}
+
+	t.Status = Done
+
+	return nil
+}
+
 // normalizeTitle remove espaços nas pontas e valida o título.
 func normalizeTitle(title string) (string, error) {
 	title = strings.TrimSpace(title)
